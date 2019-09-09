@@ -1,5 +1,7 @@
-name = RESTful ws OAuth2 Server
+name = restws OAuth2 Server
 description = Authenticate OAuth2 requests with the Drupal RESTful Web Services module
 core = 7.x
 dependencies[] = oauth2_server
 dependencies[] = restws
+
+configure = admin/config/system/restws_oauth2_server

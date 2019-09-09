@@ -81,3 +81,50 @@ function restws_oauth2_server_restws_request_alter(array &$request) {
   // cookies, but not at OAuth2 Authentication.
   drupal_page_is_cacheable(FALSE);
 }
+
+/**
+ * Implements hook_menu().
+ */
+function restws_oauth2_server_menu(){
+  $items = array();
+  $items['admin/config/system/restws_oauth2_server'] = [
+    'title'            => 'restws OAuth2 Server',
+    'description'      => 'Configure OAuth2 authentication server for restws.',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('restws_oauth2_server_config_form'),
+    'access arguments' => ['Administer OAuth2 Server'],
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  return $items;
+}
+
+/**
+ * Admin page to configure the OAuth2 server for use with restws.
+ */
+function restws_oauth2_server_config_form($form, &$form_state){
+  $server_name = variable_get('restws_oauth2_server_name', 'server_name');
+  $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
+
+  $form['restws_oauth2_server_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OAuth2 Server Name'),
+    '#description' => t('Machine Name of the OAuth2 Server to configure with restws.
+      This will be saved under the global variable \'restws_oauth2_server_name\'.'),
+    '#default_value' => $server_name,
+    '#size' => 60,
+    '#required' => TRUE,
+  );
+
+  $form['restws_oauth2_server_scope'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OAuth2 restws Scope'),
+    '#description' => t('OAuth2 scope for restws access. \'restws_oauth2_server_scope\' by default.
+      This will be saved under the global variable \'restws_oauth2_server_scope\'.'),
+    '#default_value' => $scope_name,
+    '#size' => 60,
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
