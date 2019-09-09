@@ -11,17 +11,17 @@
  * Performs a user login from the User ID of the Authentication Token.
  */
 function restws_oauth2_server_init() {
-  if (!$server = variable_get('oauth2_server_restful_server')) {
-    drupal_set_message("Set the server name!!", 'error');
+  if (!$server = variable_get('restws_oauth2_server_name')) {
     return NULL;
   }
 
-  $server_name = variable_get('oauth2_server_restful_server');
+  $server_name = variable_get('restws_oauth2_server_name');
+  $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
 
   # Only check for tokens if the user is not authenticated.
   if (user_is_anonymous()) {
     # Check if an OAuth2 request was made.
-    $result = oauth2_server_check_access('farm_oauth', 'oauth2_server_restful_scope');
+    $result = oauth2_server_check_access($server_name, $scope_name);
 
     # Check if a Token was returned, or an error Response.
     if ($result instanceof \OAuth2\Response) {
