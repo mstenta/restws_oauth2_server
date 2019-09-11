@@ -18,35 +18,41 @@ function restws_oauth2_server_init() {
   $server_name = variable_get('restws_oauth2_server_name');
   $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
 
-  # Only check for tokens if the user is not authenticated.
+  // Only check for tokens if the user is not authenticated.
   if (user_is_anonymous()) {
-    # Check if an OAuth2 request was made.
+
+    // Check if an OAuth2 request was made.
     $result = oauth2_server_check_access($server_name, $scope_name);
 
-    # Check if a Token was returned, or an error Response.
+    // Check if a Token was returned, or an error Response.
     if ($result instanceof \OAuth2\Response) {
       $status_code = $result->getStatusCode();
       switch ($status_code) {
+
+        // Send 401 errors that indicate an insufficient scope
         case 401:
-          # Send 401 errors that indicate an insufficient scope
           //oauth2_server_send_response($result);
+          break;
+
+        // Don't send the error for 403 errors. This will break pages
+        // when an anonymous user really is making requests
+        // Including the /oauth2/authorize login form endpoint.
         case 403:
-          # Don't send the error for 403 errors. This will break pages
-          # when an anonymous user really is making requests
-          # Including the /oauth2/authorize login form endpoint.
+          break;
       }
     }
     elseif (is_array($result) && !empty($result['user_id'])) {
-      # Reset the global user
+
+      // Reset the global user.
       global $user;
       $user = user_load($result['user_id']);
 
-      # Finish "logging" in the User connected with the Token
+      // Finish "logging" in the User connected with the Token.
       $login_array = array('name' => $user->name);
       user_login_finalize($login_array);
       drupal_set_message($user->name . ' logged in via Token.', 'message');
 
-      # Reset the page so the user if fully authenticated.
+      // Reset the page so the user if fully authenticated.
       if (!user_is_anonymous()) {
         drupal_static_reset();
 
@@ -58,13 +64,13 @@ function restws_oauth2_server_init() {
         // and user/1.json.
         _restws_determine_router_item();
       }
+
+      // Or, clear the login form error and remove the login failure message.
       else {
-        // Clear the login form error and remove the login failure message.
         $form = &drupal_static('form_set_error', array());
         $form = array();
         drupal_get_messages();
       }
-
     }
   }
 }
@@ -75,6 +81,7 @@ function restws_oauth2_server_init() {
  * Implements hook_restws_request_alter().
  */
 function restws_oauth2_server_restws_request_alter(array &$request) {
+
   // Disable page caching for security reasons so that an authenticated user
   // response never gets into the page cache for anonymous users.
   // This is necessary because the page cache system only looks at session
@@ -95,7 +102,6 @@ function restws_oauth2_server_menu(){
     'access arguments' => ['Administer OAuth2 Server'],
     'type' => MENU_NORMAL_ITEM,
   ];
-
   return $items;
 }
 
