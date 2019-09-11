@@ -30,19 +30,7 @@ function restws_oauth2_server_init() {
     // Check if a Token was returned, or an error Response.
     if ($result instanceof \OAuth2\Response) {
       $status_code = $result->getStatusCode();
-      switch ($status_code) {
-
-        // Send 401 errors that indicate an insufficient scope
-        case 401:
-          //oauth2_server_send_response($result);
-          break;
-
-        // Don't send the error for 403 errors. This will break pages
-        // when an anonymous user really is making requests
-        // Including the /oauth2/authorize login form endpoint.
-        case 403:
-          break;
-      }
+      watchdog('restws_oauth2_server', t('OAuth2 token authentication failed. Error code: @code', array('@code' => $status_code)));
     }
     elseif (is_array($result) && !empty($result['user_id'])) {
 
