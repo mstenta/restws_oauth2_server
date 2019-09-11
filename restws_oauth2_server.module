@@ -14,10 +14,10 @@ function restws_oauth2_server_init() {
 
   // Load the OAuth2 Server and Scope that are to be authenticated against.
   $server_name = variable_get('restws_oauth2_server_name', FALSE);
-  $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
+  $scope_name = variable_get('restws_oauth2_server_scope', FALSE);
 
   // If the server name is not set, bail.
-  if (!$server_name) {
+  if (empty($server_name) || $scope_name) {
     return NULL;
   }
 
@@ -100,8 +100,10 @@ function restws_oauth2_server_menu(){
  * Admin page to configure the OAuth2 server for use with restws.
  */
 function restws_oauth2_server_config_form($form, &$form_state){
-  $server_name = variable_get('restws_oauth2_server_name', 'server_name');
-  $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
+
+  // Load default values from variables.
+  $server_name = variable_get('restws_oauth2_server_name', '');
+  $scope_name = variable_get('restws_oauth2_server_scope', '');
 
   $form['restws_oauth2_server_name'] = array(
     '#type' => 'textfield',
@@ -115,7 +117,7 @@ function restws_oauth2_server_config_form($form, &$form_state){
   $form['restws_oauth2_server_scope'] = array(
     '#type' => 'textfield',
     '#title' => t('OAuth2 restws Scope'),
-    '#description' => t('OAuth2 scope for restws access. This will default to "restws_oauth2_server_scope".'),
+    '#description' => t('OAuth2 scope for restws access.'),
     '#default_value' => $scope_name,
     '#size' => 60,
     '#required' => TRUE,
