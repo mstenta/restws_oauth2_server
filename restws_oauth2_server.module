@@ -90,7 +90,7 @@ function restws_oauth2_server_menu(){
     'description'      => 'Configure OAuth2 authentication server for restws.',
     'page callback'    => 'drupal_get_form',
     'page arguments'   => array('restws_oauth2_server_config_form'),
-    'access arguments' => ['Administer OAuth2 Server'],
+    'access arguments' => array('administer oauth2 server'),
     'type' => MENU_NORMAL_ITEM,
   ];
   return $items;
