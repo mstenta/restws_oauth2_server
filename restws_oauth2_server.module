@@ -53,7 +53,7 @@ function restws_oauth2_server_init() {
       // Finish "logging" in the User connected with the Token.
       $login_array = array('name' => $user->name);
       user_login_finalize($login_array);
-      drupal_set_message($user->name . ' logged in via Token.', 'message');
+      watchdog('restws_oauth2_server', t('@user logged in via OAuth2 Token.', array('@user' => $user->name)));
 
       // Reset the page so the user if fully authenticated.
       if (!user_is_anonymous()) {
