@@ -85,7 +85,7 @@ function restws_oauth2_server_restws_request_alter(array &$request) {
  */
 function restws_oauth2_server_menu(){
   $items = array();
-  $items['admin/config/system/restws_oauth2_server'] = [
+  $items['admin/config/services/restws_oauth2_server'] = [
     'title'            => 'restws OAuth2 Server',
     'description'      => 'Configure OAuth2 authentication server for restws.',
     'page callback'    => 'drupal_get_form',

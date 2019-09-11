@@ -4,4 +4,4 @@ core = 7.x
 dependencies[] = oauth2_server
 dependencies[] = restws
 
-configure = admin/config/system/restws_oauth2_server
+configure = admin/config/services/restws_oauth2_server
