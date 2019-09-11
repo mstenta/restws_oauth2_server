@@ -11,12 +11,15 @@
  * Performs a user login from the User ID of the Authentication Token.
  */
 function restws_oauth2_server_init() {
-  if (!$server = variable_get('restws_oauth2_server_name', FALSE)) {
-    return NULL;
-  }
 
+  // Load the OAuth2 Server and Scope that are to be authenticated against.
   $server_name = variable_get('restws_oauth2_server_name', FALSE);
   $scope_name = variable_get('restws_oauth2_server_scope', 'restws_oauth2_server_scope');
+
+  // If the server name is not set, bail.
+  if (!$server_name) {
+    return NULL;
+  }
 
   // Only check for tokens if the user is not authenticated.
   if (user_is_anonymous()) {
