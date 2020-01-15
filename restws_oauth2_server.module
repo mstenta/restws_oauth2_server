@@ -22,7 +22,7 @@ function restws_oauth2_server_init() {
   }
 
   // Only check for tokens if the user is not authenticated.
-  if (user_is_anonymous()) {
+  if (!user_is_logged_in()) {
 
     // Check if an OAuth2 request was made.
     $result = oauth2_server_check_access($server_name, $scope_name);
