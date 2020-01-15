@@ -14,7 +14,7 @@ function restws_oauth2_server_init() {
 
   // Load the OAuth2 Server and Scope that are to be authenticated against.
   $server_name = variable_get('restws_oauth2_server_name', FALSE);
-  $scope_name = variable_get('restws_oauth2_server_scope', FALSE);
+  $scope_name = "user_access";
 
   // If the server name is not set, bail.
   if (empty($server_name) || empty($scope_name)) {
@@ -103,22 +103,12 @@ function restws_oauth2_server_config_form($form, &$form_state){
 
   // Load default values from variables.
   $server_name = variable_get('restws_oauth2_server_name', '');
-  $scope_name = variable_get('restws_oauth2_server_scope', '');
 
   $form['restws_oauth2_server_name'] = array(
     '#type' => 'textfield',
     '#title' => t('OAuth2 Server Name'),
     '#description' => t('Machine Name of the OAuth2 Server to configure with restws.'),
     '#default_value' => $server_name,
-    '#size' => 60,
-    '#required' => TRUE,
-  );
-
-  $form['restws_oauth2_server_scope'] = array(
-    '#type' => 'textfield',
-    '#title' => t('OAuth2 restws Scope'),
-    '#description' => t('OAuth2 scope for restws access.'),
-    '#default_value' => $scope_name,
     '#size' => 60,
     '#required' => TRUE,
   );
