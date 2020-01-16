@@ -30,7 +30,7 @@ function restws_oauth2_server_init() {
     // Check if a Token was returned, or an error Response.
     if ($result instanceof \OAuth2\Response) {
       $status_code = $result->getStatusCode();
-      watchdog('restws_oauth2_server', t('OAuth2 token authentication failed. Error code: @code', array('@code' => $status_code)));
+      watchdog('restws_oauth2_server', t('OAuth2 token authentication failed for scope: "@scope" Error code: @code', array('@scope' => $scope_name, '@code' => $status_code)));
     }
     elseif (is_array($result) && !empty($result['user_id'])) {
 
