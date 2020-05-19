@@ -33,10 +33,15 @@ function restws_oauth2_server_init() {
       global $user;
       $user = user_load($result['user_id']);
 
-      // Finish "logging" in the User connected with the Token.
-      $login_array = array('name' => $user->name);
-      user_login_finalize($login_array);
-      watchdog('restws_oauth2_server', t('@user logged in via OAuth2 Token.', array('@user' => $user->name)));
+      // Regenerate the session ID to prevent against session fixation attacks.
+      // This is called before hook_user in case one of those functions fails
+      // or incorrectly does a redirect which would leave the old session in place.
+      // This is copied directly from user_login_finalize(). We don't call
+      // user_login_finalize() directly here because we don't want excessive
+      // watchdog messages "Session opened for %name" on every request.
+      $edit = array('name' => $user->name);
+      drupal_session_regenerate();
+      user_module_invoke('login', $edit, $user);
 
       // Reset the page so the user if fully authenticated.
       if (!user_is_anonymous()) {
