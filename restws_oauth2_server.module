@@ -94,12 +94,16 @@ function restws_oauth2_server_oauth2_server_token($server, \OAuth2\Request $requ
   // If the request was successful, log basic information about it.
   if ($code == 200) {
 
+    // Get the client_id.
+    $client_id = $request->request['client_id'];
+
     // Get the scope.
     $scope = $response->getParameter('scope');
 
     // Define some basic details to include in the log entry.
     $details = array(
       'type' => $request->request['grant_type'],
+      'client_id' => $client_id,
       'scope' => $scope,
     );
 
