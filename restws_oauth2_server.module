@@ -83,6 +83,11 @@ function restws_oauth2_server_restws_request_alter(array &$request) {
  */
 function restws_oauth2_server_oauth2_server_token($server, \OAuth2\Request $request, \OAuth2\Response $response) {
 
+  // If this is not a POST request, bail.
+  if (empty($request->server['REQUEST_METHOD']) || $request->server['REQUEST_METHOD'] != 'POST') {
+    return;
+  }
+
   // Get the response code.
   $code = $response->getStatusCode();
 
