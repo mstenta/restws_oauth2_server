@@ -67,8 +67,6 @@ function restws_oauth2_server_init() {
 }
 
 /**
-
-/**
  * Implements hook_restws_request_alter().
  */
 function restws_oauth2_server_restws_request_alter(array &$request) {
