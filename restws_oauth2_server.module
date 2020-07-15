@@ -43,6 +43,10 @@ function restws_oauth2_server_init() {
       drupal_session_regenerate();
       user_module_invoke('login', $edit, $user);
 
+      // Remember that we logged in the user, so we can log them back out in
+      // hook_exit().
+      restws_oauth2_server_logged_in(TRUE);
+
       // Reset the page so the user if fully authenticated.
       if (!user_is_anonymous()) {
         drupal_static_reset();
@@ -64,6 +68,39 @@ function restws_oauth2_server_init() {
       }
     }
   }
+}
+
+/**
+ * Implements hook_exit().
+ */
+function restws_oauth2_server_exit($destination = NULL) {
+
+  // If we logged the user in during hook_init(), log them out.
+  global $user;
+  if (!empty($user->uid) && restws_oauth2_server_logged_in()) {
+    module_invoke_all('user_logout', $user);
+    session_destroy();
+  }
+}
+
+/**
+ * Remember whether we logged the user in via OAuth.
+ *
+ * @param $set
+ *   Set this to TRUE when a user is logged in.
+ *
+ * @return bool
+ *   Returns TRUE if the user was logged in.
+ *
+ * @see restws_oauth2_server_init()
+ * @see restws_oauth2_server_exit()
+ */
+function restws_oauth2_server_logged_in($set = NULL) {
+  static $logged_in = FALSE;
+  if (!empty($set)) {
+    $logged_in = TRUE;
+  }
+  return $logged_in;
 }
 
 /**
